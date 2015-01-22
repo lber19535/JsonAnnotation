@@ -21,7 +21,7 @@ public class JsonUtils {
 		case JsonObject:
 			break;
 		case Long:
-			return (float) jsonObject.getLong(name);
+			return jsonObject.getLong(name);
 		case String:
 			return jsonObject.getString(name);
 		case Unknow:
