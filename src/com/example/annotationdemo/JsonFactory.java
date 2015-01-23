@@ -30,6 +30,13 @@ public class JsonFactory {
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(JsonField.class)) {
 				JsonField jsonField = field.getAnnotation(JsonField.class);
+				/*
+				 * order:
+				 * 1. detect field type
+				 * 2. detect field name(if don't set field name, use field actual name)
+				 * 3. if the json object don't have that field, then throw a exception
+				 * 4. 
+				 */
 				if (jsonField.name().equals(JsonField.DEFAULT_STRING)) {
 					String fieldName = field.getName();
 					Object fieldValue;
@@ -54,6 +61,15 @@ public class JsonFactory {
 			}
 		}
 		return (T) obj;
+	}
+	
+	private static FieldType getFieldType(Field field){
+		JsonField jsonField = field.getAnnotation(JsonField.class);
+		if (jsonField.type() == FieldType.Unknow) {
+			return null;
+		}else {
+			return jsonField.type();
+		}
 	}
 
 	private static Object getBeanObj(Class javaBean) throws Exception {
