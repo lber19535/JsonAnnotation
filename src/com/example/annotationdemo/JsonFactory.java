@@ -1,8 +1,8 @@
 package com.example.annotationdemo;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.annotationdemo.annotation.FieldType;
@@ -31,26 +31,26 @@ public class JsonFactory {
 			if (field.isAnnotationPresent(JsonField.class)) {
 				JsonField jsonField = field.getAnnotation(JsonField.class);
 				/*
-				 * order:
-				 * 1. detect field type
-				 * 2. detect field name(if don't set field name, use field actual name)
-				 * 3. if the json object don't have that field, then throw a exception
-				 * 4. 
+				 * order: 
+				 * 1. detect field type √
+				 * 2. detect field name(if don't set field name, use field actual name) 
+				 * 3. if the json object don't have that field, then throw a exception 
+				 * 4.
 				 */
 				if (jsonField.name().equals(JsonField.DEFAULT_STRING)) {
 					String fieldName = field.getName();
 					Object fieldValue;
 					// TODO if not set type, we should detect the object type
-					System.out.println(field.getType());
-					if (jsonField.type() == FieldType.Unknow) {
+					FieldType fieldType = getFieldType(field);
+					if (fieldType == FieldType.Unknow) {
 						// TODO if json object don't have define field, we
 						// should throw a Exception
 						// jsonObject.has(fieldName);
-						fieldValue = JsonUtils.getField(jsonField.type(),
-								jsonObject, fieldName);
+						fieldValue = JsonUtils.getField(fieldType, jsonObject,
+								fieldName);
 					} else {
-						fieldValue = JsonUtils.getField(jsonField.type(),
-								jsonObject, fieldName);
+						fieldValue = JsonUtils.getField(fieldType, jsonObject,
+								fieldName);
 					}
 					field.setAccessible(true);
 					field.set(obj, fieldValue);
@@ -62,12 +62,26 @@ public class JsonFactory {
 		}
 		return (T) obj;
 	}
-	
-	private static FieldType getFieldType(Field field){
+
+	private static FieldType getFieldType(Field field) {
 		JsonField jsonField = field.getAnnotation(JsonField.class);
 		if (jsonField.type() == FieldType.Unknow) {
-			return null;
-		}else {
+			Type fieldType = field.getGenericType();
+			if (fieldType == String.class) {
+				return FieldType.String;
+			} else if (fieldType == int.class) {
+				return FieldType.Int;
+			} else if (fieldType == float.class) {
+				return FieldType.Float;
+			} else if (fieldType == double.class) {
+				return FieldType.Double;
+			} else if (fieldType == long.class) {
+				return FieldType.Long;
+			} else {
+				return FieldType.Unknow;
+			}
+
+		} else {
 			return jsonField.type();
 		}
 	}
