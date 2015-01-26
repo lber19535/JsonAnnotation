@@ -12,6 +12,8 @@ import com.example.annotationdemo.annotation.JsonObject;
 
 public class JsonFactory {
 
+	private static final String EMPTY_JSON = "{}";
+
 	/**
 	 * Create java bean by json string
 	 * 
@@ -32,8 +34,8 @@ public class JsonFactory {
 		}
 		// if json string is null
 		if (json == null) {
-			throw new Exception("json string is Null");
-
+			// throw new Exception("json string is Null");
+			json = EMPTY_JSON;
 		}
 		JSONObject jsonObject = new JSONObject(json);
 		Object targetObj = getBeanObj(javaBean);
@@ -43,9 +45,9 @@ public class JsonFactory {
 				JsonField jsonField = field.getAnnotation(JsonField.class);
 				/*
 				 * order: 
-				 * 1. detect field type
+				 * 1. detect field type 
 				 * 2. detect field name(if don't set field name, use field actual name) 
-				 * 3. if the json object don't have that field, then throw a exception 
+				 * 3. if the json object don't have that field, then throw a exception
 				 * 4. set json field values
 				 */
 				FieldType fieldType = getFieldType(field);
@@ -56,8 +58,13 @@ public class JsonFactory {
 
 					break;
 				case JsonObject:
-					fieldValue = createBean(field.getType().getClass(),
-							jsonObject.getJSONObject(fieldName).toString());
+					if (json.equals(EMPTY_JSON)) {
+						fieldValue = createBean(field.getType(),
+								null);
+					} else {
+						fieldValue = createBean(field.getType(),
+								jsonObject.getJSONObject(fieldName).toString());
+					}
 					break;
 				case Unknow:
 					throw new Exception("Json Field Is Unkonw Type");
@@ -77,8 +84,8 @@ public class JsonFactory {
 	private static Object getFieldValue(JsonField jsonField, FieldType type,
 			JSONObject jsonObject, String name) throws JSONException {
 		/*
-		 * 1. if json object is null, set java bean with the default values 
-		 *    (1.have set default value 2.json object is null)
+		 * 1. if json object is null, set java bean with the default values
+		 * (1.have set default value 2.json object is null) 
 		 * 2. if java bean don't set default value
 		 */
 		if (!jsonObject.has(name)) {
