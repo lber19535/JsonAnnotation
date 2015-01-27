@@ -42,11 +42,10 @@ public class JsonFactory {
 		Field[] fields = getBeanFields(targetObj);
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(JsonField.class)) {
-				JsonField jsonField = field.getAnnotation(JsonField.class);
 				/*
 				 * order: 
-				 * 1. detect field type 
-				 * 2. detect field name(if don't set field name, use field actual name) 
+				 * 1. detect field type
+				 * 2. detect field name (if don't set field name, use field actual name) 
 				 * 3. if the json object don't have that field, then throw a exception
 				 * 4. set json field values
 				 */
@@ -55,39 +54,31 @@ public class JsonFactory {
 				Object fieldValue = null;
 				switch (fieldType) {
 				case JsonArray:
-
-					break;
-				case JsonObject:
-					if (json.equals(EMPTY_JSON)) {
-						fieldValue = createBean(field.getType(),
-								null);
-					} else {
-						fieldValue = createBean(field.getType(),
-								jsonObject.getJSONObject(fieldName).toString());
-					}
+					
 					break;
 				case Unknow:
 					throw new Exception("Json Field Is Unkonw Type");
 				default:
-					fieldValue = getFieldValue(jsonField, fieldType,
+					fieldValue = getFieldValue(field, fieldType,
 							jsonObject, fieldName);
 					break;
 				}
 				field.setAccessible(true);
 				field.set(targetObj, fieldValue);
-
 			}
 		}
 		return (T) targetObj;
 	}
 
-	private static Object getFieldValue(JsonField jsonField, FieldType type,
-			JSONObject jsonObject, String name) throws JSONException {
+	private static Object getFieldValue(Field field, FieldType type,
+			JSONObject jsonObject, String name) throws Exception {
 		/*
 		 * 1. if json object is null, set java bean with the default values
 		 * (1.have set default value 2.json object is null) 
 		 * 2. if java bean don't set default value
 		 */
+		JsonField jsonField = field.getAnnotation(JsonField.class);
+
 		if (!jsonObject.has(name)) {
 			switch (type) {
 			case Int:
@@ -99,7 +90,7 @@ public class JsonFactory {
 			case JsonArray:
 				break;
 			case JsonObject:
-				break;
+				return createBean(field.getType(), null);
 			case Long:
 				return Long.valueOf(jsonField.defaultValue());
 			case String:
@@ -120,7 +111,8 @@ public class JsonFactory {
 			case JsonArray:
 				break;
 			case JsonObject:
-				break;
+				return createBean(field.getType(),
+						jsonObject.getJSONObject(name).toString());
 			case Long:
 				return jsonObject.getLong(name);
 			case String:
@@ -161,12 +153,13 @@ public class JsonFactory {
 			} else {
 				return FieldType.Unknow;
 			}
-
+			// TODO add json object and json array
 		} else {
 			return jsonField.type();
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	private static Object getBeanObj(Class javaBean) throws Exception {
 		return Class.forName(javaBean.getName()).newInstance();
 	}
