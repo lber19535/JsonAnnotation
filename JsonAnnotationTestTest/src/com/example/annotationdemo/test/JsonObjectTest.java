@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.annotationdemo.JsonFactory;
+import com.example.annotationdemo.Jeson;
 import com.example.annotationdemo.model.Company;
 import com.example.annotationdemo.model.PeopleAll;
 import com.example.annotationdemo.model.PeopleWithoutType;
@@ -109,7 +109,7 @@ public class JsonObjectTest extends TestCase {
 
 	public void testJsonBaseTypeAnnotation() {
 		try {
-			PeopleAll people = JsonFactory.createBean(PeopleAll.class,
+			PeopleAll people = Jeson.createBean(PeopleAll.class,
 					jsonObjStr);
 			assertEquals("John", people.getFirstName());
 			assertEquals("Smith", people.getLastName());
@@ -125,7 +125,7 @@ public class JsonObjectTest extends TestCase {
 
 	public void testFieldDetect() {
 		try {
-			PeopleWithoutType people = JsonFactory.createBean(
+			PeopleWithoutType people = Jeson.createBean(
 					PeopleWithoutType.class, jsonObjStr);
 			assertEquals("John", people.getFirstName());
 			assertEquals("Smith", people.getLastName());
@@ -141,7 +141,7 @@ public class JsonObjectTest extends TestCase {
 
 	public void testEmptyJsonDetect() {
 		try {
-			PeopleWithoutType people = JsonFactory.createBean(
+			PeopleWithoutType people = Jeson.createBean(
 					PeopleWithoutType.class, emptyJsonStr);
 			assertEquals("Bill", people.getFirstName());
 			assertEquals("Lv", people.getLastName());
@@ -157,7 +157,7 @@ public class JsonObjectTest extends TestCase {
 
 	public void testJsonEmptyObjectsDetect() {
 		try {
-			Company company = JsonFactory.createBean(Company.class,
+			Company company = Jeson.createBean(Company.class,
 					emptyJsonStr);
 			assertEquals("HT", company.getName());
 			PeopleAll ceo = company.getCeo();
@@ -175,7 +175,7 @@ public class JsonObjectTest extends TestCase {
 
 	public void testJsonObjectsDetect() {
 		try {
-			Company company = JsonFactory
+			Company company = Jeson
 					.createBean(Company.class, jsonObjsStr);
 			assertEquals("Baidu", company.getName());
 			PeopleAll ceo = company.getCeo();
@@ -193,7 +193,7 @@ public class JsonObjectTest extends TestCase {
 
 	public void testJsonObjectsListDetect() {
 		try {
-			Company company = JsonFactory.createBean(Company.class,
+			Company company = Jeson.createBean(Company.class,
 					jsonObjListStr);
 			assertEquals("Baidu", company.getName());
 			PeopleAll ceo = company.getCeo();

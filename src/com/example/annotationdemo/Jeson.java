@@ -16,7 +16,15 @@ import com.example.annotationdemo.annotation.FieldType;
 import com.example.annotationdemo.annotation.JsonField;
 import com.example.annotationdemo.annotation.JsonObject;
 
-public class JsonFactory {
+/**
+ * This util use reflect and {@link org.json} to analysis the json object,
+ * like other orm framework, depend on the annotation with java bean and
+ * auto analysis json string to java bean.
+ * 
+ * @author Bill Lv
+ * @version 1.0
+ */
+public class Jeson {
 
 	private static final String EMPTY_JSON = "{}";
 	private static final String TAG = "Jeson";
