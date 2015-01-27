@@ -1,10 +1,16 @@
 package com.example.annotationdemo;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.util.Log;
 
 import com.example.annotationdemo.annotation.FieldType;
 import com.example.annotationdemo.annotation.JsonField;
@@ -13,6 +19,7 @@ import com.example.annotationdemo.annotation.JsonObject;
 public class JsonFactory {
 
 	private static final String EMPTY_JSON = "{}";
+	private static final String TAG = "Jeson";
 
 	/**
 	 * Create java bean by json string
@@ -35,6 +42,7 @@ public class JsonFactory {
 		// if json string is null
 		if (json == null) {
 			// throw new Exception("json string is Null");
+			Log.e(TAG, "json string is null");
 			json = EMPTY_JSON;
 		}
 		JSONObject jsonObject = new JSONObject(json);
@@ -54,13 +62,15 @@ public class JsonFactory {
 				Object fieldValue = null;
 				switch (fieldType) {
 				case JsonArray:
-					
+
+					fieldValue = getFieldValue(field, fieldType, jsonObject,
+							fieldName);
 					break;
 				case Unknow:
 					throw new Exception("Json Field Is Unkonw Type");
 				default:
-					fieldValue = getFieldValue(field, fieldType,
-							jsonObject, fieldName);
+					fieldValue = getFieldValue(field, fieldType, jsonObject,
+							fieldName);
 					break;
 				}
 				field.setAccessible(true);
@@ -109,7 +119,8 @@ public class JsonFactory {
 			case Float:
 				return (float) jsonObject.getDouble(name);
 			case JsonArray:
-				break;
+				JSONArray array = jsonObject.getJSONArray(name);
+				return getListObject(array, field);
 			case JsonObject:
 				return createBean(field.getType(),
 						jsonObject.getJSONObject(name).toString());
@@ -166,5 +177,31 @@ public class JsonFactory {
 
 	private static Field[] getBeanFields(Object obj) throws Exception {
 		return obj.getClass().getDeclaredFields();
+	}
+
+	private static Class<?> getListGenericType(Field field) {
+		ParameterizedType parameterizedType = (ParameterizedType) field
+				.getGenericType();
+		Class<?> genericType = (Class<?>) parameterizedType
+				.getActualTypeArguments()[0];
+		return genericType;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static Object getListObject(JSONArray array, Field field)
+			throws JSONException, Exception {
+		@SuppressWarnings("rawtypes")
+		List list = new ArrayList();
+		Class<?> genericType = getListGenericType(field);
+		if (array == null) {
+			Object obj = createBean(genericType, null);
+			list.add(obj);
+		}else {
+			for (int i = 0; i < array.length(); i++) {
+				Object obj = createBean(genericType, array.get(i).toString());
+				list.add(obj);
+			}
+		}
+		return list;
 	}
 }

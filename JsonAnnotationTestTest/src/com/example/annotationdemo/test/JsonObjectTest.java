@@ -13,8 +13,6 @@ import com.example.annotationdemo.model.Company;
 import com.example.annotationdemo.model.PeopleAll;
 import com.example.annotationdemo.model.PeopleWithoutType;
 
-import dalvik.annotation.TestTarget;
-
 public class JsonObjectTest extends TestCase {
 
 	private String jsonObjStr;
@@ -26,19 +24,49 @@ public class JsonObjectTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		jsonObjStr = "{\"firstName\": \"John\"," + "\"lastName\": \"Smith\","
-				+ "\"sex\": \"third\"," + "\"age\": 25," + "\"height\": 175,"
-				+ "\"phoneNumber\": 13800000000," + "\"weight\": 65.1 }";
+		initJsonObjStr();
 		emptyJsonStr = "{}";
-		jsonObjsStr = "{\"name\":\"Baidu\", " + "\"ceo\":"
-				+ "{\"firstName\": \"Robin\"," + "\"lastName\": \"Li\","
-				+ "\"sex\": \"third\"," + "\"age\": 46," + "\"height\": 175,"
-				+ "\"phoneNumber\": 13800000000," + "\"weight\": 65.1 }}";
-
+		initJsonObjsStr();
 		initJsonObjListString();
 
 	}
 
+	/*
+	 * initialize simple json object
+	 */
+	private void initJsonObjStr() throws Exception {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("firstName", "John");
+		jsonObject.put("lastName", "Smith");
+		jsonObject.put("sex", "third");
+		jsonObject.put("age", 25);
+		jsonObject.put("height", 175);
+		jsonObject.put("phoneNumber", 13800000000L);
+		jsonObject.put("weight", 65.1);
+		jsonObjStr = jsonObject.toString();
+	}
+
+	/*
+	 * initialize json object with inner json object
+	 */
+	private void initJsonObjsStr() throws Exception {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("name", "Baidu");
+		JSONObject ceoObject = new JSONObject();
+		ceoObject.put("firstName", "Robin");
+		ceoObject.put("lastName", "Li");
+		ceoObject.put("sex", "third");
+		ceoObject.put("age", 46);
+		ceoObject.put("height", 175);
+		ceoObject.put("phoneNumber", 13800000000L);
+		ceoObject.put("weight", 65.1);
+		jsonObject.put("ceo", ceoObject);
+		jsonObjsStr = jsonObject.toString();
+	}
+
+	/*
+	 * base on initJsonObjsStr(), add a json array
+	 */
 	private void initJsonObjListString() throws Exception {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("name", "Baidu");
