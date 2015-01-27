@@ -1,4 +1,4 @@
-package com.example.annotationdemo.test;
+package com.bill.jeson.test;
 
 import java.util.List;
 
@@ -8,10 +8,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.annotationdemo.Jeson;
-import com.example.annotationdemo.model.Company;
-import com.example.annotationdemo.model.PeopleAll;
-import com.example.annotationdemo.model.PeopleWithoutType;
+import com.bill.jeson.Jeson;
+import com.bill.jeson.test.model.Company;
+import com.bill.jeson.test.model.PeopleAll;
+import com.bill.jeson.test.model.PeopleWithoutType;
 
 public class JsonObjectTest extends TestCase {
 
@@ -109,8 +109,7 @@ public class JsonObjectTest extends TestCase {
 
 	public void testJsonBaseTypeAnnotation() {
 		try {
-			PeopleAll people = Jeson.createBean(PeopleAll.class,
-					jsonObjStr);
+			PeopleAll people = Jeson.createBean(PeopleAll.class, jsonObjStr);
 			assertEquals("John", people.getFirstName());
 			assertEquals("Smith", people.getLastName());
 			assertEquals("third", people.getSex());
@@ -157,8 +156,7 @@ public class JsonObjectTest extends TestCase {
 
 	public void testJsonEmptyObjectsDetect() {
 		try {
-			Company company = Jeson.createBean(Company.class,
-					emptyJsonStr);
+			Company company = Jeson.createBean(Company.class, emptyJsonStr);
 			assertEquals("HT", company.getName());
 			PeopleAll ceo = company.getCeo();
 			assertEquals("Bill", ceo.getFirstName());
@@ -175,8 +173,7 @@ public class JsonObjectTest extends TestCase {
 
 	public void testJsonObjectsDetect() {
 		try {
-			Company company = Jeson
-					.createBean(Company.class, jsonObjsStr);
+			Company company = Jeson.createBean(Company.class, jsonObjsStr);
 			assertEquals("Baidu", company.getName());
 			PeopleAll ceo = company.getCeo();
 			assertEquals("Robin", ceo.getFirstName());
@@ -193,8 +190,7 @@ public class JsonObjectTest extends TestCase {
 
 	public void testJsonObjectsListDetect() {
 		try {
-			Company company = Jeson.createBean(Company.class,
-					jsonObjListStr);
+			Company company = Jeson.createBean(Company.class, jsonObjListStr);
 			assertEquals("Baidu", company.getName());
 			PeopleAll ceo = company.getCeo();
 			assertEquals("Robin", ceo.getFirstName());

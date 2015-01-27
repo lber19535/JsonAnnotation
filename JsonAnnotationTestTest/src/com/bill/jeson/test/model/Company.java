@@ -1,10 +1,10 @@
-package com.example.annotationdemo.model;
+package com.bill.jeson.test.model;
 
 import java.util.List;
 
-import com.example.annotationdemo.annotation.FieldType;
-import com.example.annotationdemo.annotation.JsonField;
-import com.example.annotationdemo.annotation.JsonObject;
+import com.bill.jeson.annotation.FieldType;
+import com.bill.jeson.annotation.JsonField;
+import com.bill.jeson.annotation.JsonObject;
 
 @JsonObject
 public class Company {

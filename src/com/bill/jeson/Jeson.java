@@ -1,4 +1,4 @@
-package com.example.annotationdemo;
+package com.bill.jeson;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -12,14 +12,14 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.example.annotationdemo.annotation.FieldType;
-import com.example.annotationdemo.annotation.JsonField;
-import com.example.annotationdemo.annotation.JsonObject;
+import com.bill.jeson.annotation.FieldType;
+import com.bill.jeson.annotation.JsonField;
+import com.bill.jeson.annotation.JsonObject;
 
 /**
- * This util use reflect and {@link org.json} to analysis the json object,
- * like other orm framework, depend on the annotation with java bean and
- * auto analysis json string to java bean.
+ * This util use reflect and {@link org.json} to analysis the json object, like
+ * other orm framework, depend on the annotation with java bean and auto
+ * analysis json string to java bean.
  * 
  * @author Bill Lv
  * @version 1.0
@@ -204,7 +204,7 @@ public class Jeson {
 		if (array == null) {
 			Object obj = createBean(genericType, null);
 			list.add(obj);
-		}else {
+		} else {
 			for (int i = 0; i < array.length(); i++) {
 				Object obj = createBean(genericType, array.get(i).toString());
 				list.add(obj);

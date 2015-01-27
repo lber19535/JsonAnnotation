@@ -1,25 +1,25 @@
-package com.example.annotationdemo.model;
+package com.bill.jeson.test.model;
 
-import com.example.annotationdemo.annotation.FieldType;
-import com.example.annotationdemo.annotation.JsonField;
-import com.example.annotationdemo.annotation.JsonObject;
+import com.bill.jeson.annotation.FieldType;
+import com.bill.jeson.annotation.JsonField;
+import com.bill.jeson.annotation.JsonObject;
 
 @JsonObject
-public class PeopleWithoutType {
+public class PeopleAll {
 
-	@JsonField(defaultValue = "Bill")
+	@JsonField(type = FieldType.String, defaultValue = "Bill")
 	private String firstName;
-	@JsonField(defaultValue = "Lv")
+	@JsonField(type = FieldType.String, defaultValue = "Lv")
 	private String lastName;
-	@JsonField(defaultValue = "man")
+	@JsonField(type = FieldType.String, defaultValue = "man")
 	private String sex;
-	@JsonField(defaultValue = "1")
+	@JsonField(type = FieldType.Int, defaultValue = "1")
 	private int age;
-	@JsonField(defaultValue = "1")
+	@JsonField(type = FieldType.Float, defaultValue = "1")
 	private float height;
-	@JsonField(defaultValue = "1")
+	@JsonField(type = FieldType.Long, defaultValue = "1")
 	private long phoneNumber;
-	@JsonField(defaultValue = "1")
+	@JsonField(type = FieldType.Double, defaultValue = "1")
 	private double weight;
 
 	public String getFirstName() {

@@ -1,4 +1,4 @@
-package com.example.annotationdemo.annotation;
+package com.bill.jeson.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Use to define json field
  * 
- * @author Bill
+ * @author Bill Lv
  *
  */
 
