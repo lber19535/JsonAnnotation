@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import com.bill.jeson.Jeson;
 import com.bill.jeson.test.model.Company;
+import com.bill.jeson.test.model.HttpHeader;
 import com.bill.jeson.test.model.PeopleAll;
 import com.bill.jeson.test.model.PeopleWithoutType;
 
@@ -19,6 +20,7 @@ public class JsonObjectTest extends TestCase {
 	private String emptyJsonStr;
 	private String jsonObjsStr;
 	private String jsonObjListStr;
+	private String jsonHttpheaderStr;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -28,6 +30,7 @@ public class JsonObjectTest extends TestCase {
 		emptyJsonStr = "{}";
 		initJsonObjsStr();
 		initJsonObjListString();
+		initHttpheaderStr();
 
 	}
 
@@ -93,6 +96,17 @@ public class JsonObjectTest extends TestCase {
 		}
 		jsonObject.put("employee", jsonArray);
 		jsonObjListStr = jsonObject.toString();
+	}
+
+	private void initHttpheaderStr() throws Exception {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("Accept-Language", "en-US,en;q=0.8");
+		jsonObject.put("Host", "headers.jsontest.com");
+		jsonObject.put("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.3");
+		jsonObject
+				.put("Accept",
+						"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+		jsonHttpheaderStr = jsonObject.toString();
 	}
 
 	public void testJsonSource() {
@@ -211,6 +225,21 @@ public class JsonObjectTest extends TestCase {
 				assertEquals(13800000000L, employee.getPhoneNumber());
 				assertEquals(55.1, employee.getWeight(), 0);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void testHttpheaderJsonDetect() {
+		try {
+			HttpHeader header = Jeson.createBean(HttpHeader.class,
+					jsonHttpheaderStr);
+			assertEquals("en-US,en;q=0.8", header.getLanguage());
+			assertEquals("headers.jsontest.com", header.getHost());
+			assertEquals("ISO-8859-1,utf-8;q=0.7,*;q=0.3", header.getCharset());
+			assertEquals(
+					"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+					header.getAccept());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
