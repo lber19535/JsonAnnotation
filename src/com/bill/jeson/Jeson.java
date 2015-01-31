@@ -59,14 +59,14 @@ public class Jeson {
 				switch (fieldType) {
 				case JsonArray:
 
-					fieldValue = getFieldValue(field, fieldType, jsonObject,
-							fieldName);
+					fieldValue = getJsonFieldValue(field, fieldType,
+							jsonObject, fieldName);
 					break;
 				case Unknow:
 					throw new Exception("Json Field Is Unkonw Type");
 				default:
-					fieldValue = getFieldValue(field, fieldType, jsonObject,
-							fieldName);
+					fieldValue = getJsonFieldValue(field, fieldType,
+							jsonObject, fieldName);
 					break;
 				}
 				field.setAccessible(true);
@@ -104,7 +104,73 @@ public class Jeson {
 		return createBean(javaBean, jsonObject);
 	}
 
-	private static Object getFieldValue(Field field, FieldType type,
+	/**
+	 * Convert java bean to json string
+	 * 
+	 * @param javaBean
+	 * @return
+	 * @throws Exception
+	 */
+	public static <T> String bean2String(T javaBean) throws Exception {
+		JsonObject beanType = javaBean.getClass().getAnnotation(
+				JsonObject.class);
+		JSONObject jsonObject = new JSONObject();
+
+		if (beanType != null) {
+
+			Field[] fields = javaBean.getClass().getDeclaredFields();
+			for (Field field : fields) {
+				JsonField fieldType = field.getAnnotation(JsonField.class);
+				if (fieldType != null) {
+					String fieldName = getFieldName(field);
+					FieldType type = getFieldType(field);
+					field.setAccessible(true);
+					Object fieldValue = field.get(javaBean);
+					jsonObject.put(fieldName, fieldValue);
+				}
+			}
+
+		} else {
+			Log.e(TAG, javaBean.getClass() + " is not a json object bean");
+		}
+		return jsonObject.toString();
+
+	}
+
+	private static Object getBeanFieldValue(Field field, FieldType type) {
+		switch (type) {
+		case String:
+
+			break;
+		case Double:
+
+			break;
+		case Float:
+
+			break;
+		case Int:
+
+			break;
+		case JsonArray:
+
+			break;
+		case JsonObject:
+
+			break;
+		case Long:
+
+			break;
+		case Unknow:
+
+			break;
+
+		default:
+			break;
+		}
+		return null;
+	}
+
+	private static Object getJsonFieldValue(Field field, FieldType type,
 			JSONObject jsonObject, String name) throws Exception {
 		/*
 		 * 1. if json object is null, set java bean with the default values

@@ -244,4 +244,29 @@ public class JsonObjectTest extends TestCase {
 			e.printStackTrace();
 		}
 	}
+
+	public void testSimpleJavaBean2String() {
+		PeopleAll all = new PeopleAll();
+		all.setAge(11);
+		all.setFirstName("Bill");
+		all.setLastName("Lv");
+		all.setHeight(177.7f);
+		all.setPhoneNumber(13000000000L);
+		all.setSex("male");
+		all.setWeight(56);
+		try {
+			String json = Jeson.bean2String(all);
+			JSONObject jsonObject = new JSONObject(json);
+			assertEquals("Bill", jsonObject.getString("firstName"));
+			assertEquals("Lv", jsonObject.getString("lastName"));
+			assertEquals("male", jsonObject.getString("sex"));
+			assertEquals(11, jsonObject.getInt("age"));
+			assertEquals(177.7, jsonObject.getDouble("height"), 0);
+			assertEquals(13000000000L, jsonObject.getLong("phoneNumber"));
+			assertEquals(56, jsonObject.getDouble("weight"), 0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
