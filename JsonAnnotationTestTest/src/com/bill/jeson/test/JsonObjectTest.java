@@ -269,7 +269,7 @@ public class JsonObjectTest extends TestCase {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// inner json object
 	public void testJavaBeanWithObj2String() {
 		PeopleAll all = new PeopleAll();
@@ -282,7 +282,7 @@ public class JsonObjectTest extends TestCase {
 		all.setWeight(56);
 		Company company = new Company();
 		company.setCeo(all);
-		
+
 		try {
 			String json = Jeson.bean2String(company);
 			JSONObject jsonObject = new JSONObject(json);
@@ -294,6 +294,39 @@ public class JsonObjectTest extends TestCase {
 			assertEquals(177.7, ceoObj.getDouble("height"), 0);
 			assertEquals(13000000000L, ceoObj.getLong("phoneNumber"));
 			assertEquals(56, ceoObj.getDouble("weight"), 0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	// inner json object and list
+	public void testJavaBeanWithList2String() {
+		try {
+			Company company = Jeson.createBean(Company.class, jsonObjListStr);
+			String json = Jeson.bean2String(company);
+			JSONObject jsonCompany = new JSONObject(json);
+			JSONObject jsonCeo = jsonCompany.getJSONObject("ceo");
+			assertEquals("Baidu", jsonCompany.getString("name"));
+			assertEquals("Robin", jsonCeo.getString("firstName"));
+			assertEquals("Li", jsonCeo.getString("lastName"));
+			assertEquals("third", jsonCeo.getString("sex"));
+			assertEquals(46, jsonCeo.getInt("age"));
+			assertEquals(175, jsonCeo.getDouble("height"), 0);
+			assertEquals(13800000000L, jsonCeo.getLong("phoneNumber"));
+			assertEquals(65.1, jsonCeo.getDouble("weight"), 0);
+			JSONArray employeeJson = jsonCompany.getJSONArray("employee");
+			assertNotNull(employeeJson);
+			for (int i = 0; i < employeeJson.length(); i++) {
+				JSONObject item = employeeJson.getJSONObject(i);
+				assertEquals("Bill", item.getString("firstName"));
+				assertEquals("Lv", item.getString("lastName"));
+				assertEquals("man", item.getString("sex"));
+				assertEquals(24, item.getInt("age"));
+				assertEquals(175, item.getDouble("height"), 0);
+				assertEquals(13800000000L, item.getLong("phoneNumber"));
+				assertEquals(55.1, item.getDouble("weight"), 0);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

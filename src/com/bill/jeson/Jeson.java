@@ -147,7 +147,17 @@ public class Jeson {
 		case Long:
 			return field.get(javaBean);
 		case JsonArray:
-			break;
+			List list = (List) field.get(javaBean);
+			JSONArray array = new JSONArray();
+			Class genericType = getListGenericType(field);
+			if (list == null) {
+				return array;
+			}
+			for (Object object : list) {
+				String item = bean2String(object);
+				array.put(new JSONObject(item));
+			}
+			return array;
 		case JsonObject:
 			return new JSONObject(bean2String(field.get(javaBean)));
 		case Unknow:
