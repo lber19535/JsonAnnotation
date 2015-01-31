@@ -30,7 +30,7 @@ public class Jeson {
 	private static final String TAG = "Jeson";
 
 	/**
-	 * Create java bean by json string
+	 * Create java bean by {@link JSONObject}
 	 * 
 	 * @param clazz
 	 *            java bean class
@@ -39,21 +39,9 @@ public class Jeson {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends Object> T createBean(Class<T> javaBean, String json)
-			throws Exception {
-		// if javabean is not a jsonobject
-		if (!javaBean.isAnnotationPresent(JsonObject.class)) {
-			throw new Exception(javaBean.getName()
-					+ " is not a json object java bean");
-		}
-		// if json string is null
-		if (json == null) {
-			// throw new Exception("json string is Null");
-			Log.e(TAG, "json string is null");
-			json = EMPTY_JSON;
-		}
-		JSONObject jsonObject = new JSONObject(json);
+	public static <T extends Object> T createBean(Class<T> javaBean,
+			JSONObject jsonObject) throws Exception {
+
 		Object targetObj = getBeanObj(javaBean);
 		Field[] fields = getBeanFields(targetObj);
 		for (Field field : fields) {
@@ -88,6 +76,34 @@ public class Jeson {
 		return (T) targetObj;
 	}
 
+	/**
+	 * Create java bean by json string
+	 * 
+	 * @param clazz
+	 *            java bean class
+	 * @param json
+	 *            json String
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Object> T createBean(Class<T> javaBean, String json)
+			throws Exception {
+		// if javabean is not a jsonobject
+		if (!javaBean.isAnnotationPresent(JsonObject.class)) {
+			throw new Exception(javaBean.getName()
+					+ " is not a json object java bean");
+		}
+		// if json string is null
+		if (json == null) {
+			// throw new Exception("json string is Null");
+			Log.e(TAG, "json string is null");
+			json = EMPTY_JSON;
+		}
+		JSONObject jsonObject = new JSONObject(json);
+		return createBean(javaBean, jsonObject);
+	}
+
 	private static Object getFieldValue(Field field, FieldType type,
 			JSONObject jsonObject, String name) throws Exception {
 		/*
@@ -108,7 +124,7 @@ public class Jeson {
 			case JsonArray:
 				break;
 			case JsonObject:
-				return createBean(field.getType(), null);
+				return createBean(field.getType(), EMPTY_JSON);
 			case Long:
 				return Long.valueOf(jsonField.defaultValue());
 			case String:
@@ -202,7 +218,7 @@ public class Jeson {
 		List list = new ArrayList();
 		Class<?> genericType = getListGenericType(field);
 		if (array == null) {
-			Object obj = createBean(genericType, null);
+			Object obj = createBean(genericType, EMPTY_JSON);
 			list.add(obj);
 		} else {
 			for (int i = 0; i < array.length(); i++) {
