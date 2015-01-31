@@ -124,8 +124,7 @@ public class Jeson {
 				if (fieldType != null) {
 					String fieldName = getFieldName(field);
 					FieldType type = getFieldType(field);
-					field.setAccessible(true);
-					Object fieldValue = field.get(javaBean);
+					Object fieldValue = getBeanFieldValue(field, type, javaBean);
 					jsonObject.put(fieldName, fieldValue);
 				}
 			}
@@ -137,37 +136,26 @@ public class Jeson {
 
 	}
 
-	private static Object getBeanFieldValue(Field field, FieldType type) {
+	private static <T> Object getBeanFieldValue(Field field, FieldType type,
+			T javaBean) throws Exception {
+		field.setAccessible(true);
 		switch (type) {
 		case String:
-
-			break;
 		case Double:
-
-			break;
 		case Float:
-
-			break;
 		case Int:
-
-			break;
+		case Long:
+			return field.get(javaBean);
 		case JsonArray:
-
 			break;
 		case JsonObject:
-
-			break;
-		case Long:
-
-			break;
+			return new JSONObject(bean2String(field.get(javaBean)));
 		case Unknow:
-
 			break;
-
 		default:
 			break;
 		}
-		return null;
+		return EMPTY_JSON;
 	}
 
 	private static Object getJsonFieldValue(Field field, FieldType type,

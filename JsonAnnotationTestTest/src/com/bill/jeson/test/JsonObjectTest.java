@@ -269,4 +269,34 @@ public class JsonObjectTest extends TestCase {
 			e.printStackTrace();
 		}
 	}
+	
+	// inner json object
+	public void testJavaBeanWithObj2String() {
+		PeopleAll all = new PeopleAll();
+		all.setAge(11);
+		all.setFirstName("Bill");
+		all.setLastName("Lv");
+		all.setHeight(177.7f);
+		all.setPhoneNumber(13000000000L);
+		all.setSex("male");
+		all.setWeight(56);
+		Company company = new Company();
+		company.setCeo(all);
+		
+		try {
+			String json = Jeson.bean2String(company);
+			JSONObject jsonObject = new JSONObject(json);
+			JSONObject ceoObj = jsonObject.getJSONObject("ceo");
+			assertEquals("Bill", ceoObj.getString("firstName"));
+			assertEquals("Lv", ceoObj.getString("lastName"));
+			assertEquals("male", ceoObj.getString("sex"));
+			assertEquals(11, ceoObj.getInt("age"));
+			assertEquals(177.7, ceoObj.getDouble("height"), 0);
+			assertEquals(13000000000L, ceoObj.getLong("phoneNumber"));
+			assertEquals(56, ceoObj.getDouble("weight"), 0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
