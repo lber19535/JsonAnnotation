@@ -112,12 +112,22 @@ public class Jeson {
 	 * @throws Exception
 	 */
 	public static <T> String bean2String(T javaBean) throws Exception {
+		return bean2JsonObj(javaBean).toString();
+	}
+
+	/**
+	 * Convert java bean to json object
+	 * 
+	 * @param javaBean
+	 * @return
+	 * @throws Exception
+	 */
+	public static <T> JSONObject bean2JsonObj(T javaBean) throws Exception {
 		JsonObject beanType = javaBean.getClass().getAnnotation(
 				JsonObject.class);
 		JSONObject jsonObject = new JSONObject();
 
 		if (beanType != null) {
-
 			Field[] fields = javaBean.getClass().getDeclaredFields();
 			for (Field field : fields) {
 				JsonField fieldType = field.getAnnotation(JsonField.class);
@@ -128,12 +138,10 @@ public class Jeson {
 					jsonObject.put(fieldName, fieldValue);
 				}
 			}
-
 		} else {
 			Log.e(TAG, javaBean.getClass() + " is not a json object bean");
 		}
-		return jsonObject.toString();
-
+		return jsonObject;
 	}
 
 	private static <T> Object getBeanFieldValue(Field field, FieldType type,
@@ -238,7 +246,7 @@ public class Jeson {
 	private static FieldType getFieldType(Field field) {
 		JsonField jsonField = field.getAnnotation(JsonField.class);
 		if (jsonField.type() == FieldType.Unknow) {
-			Class fieldType = field.getType();
+			Type fieldType = field.getType();
 			if (fieldType == String.class) {
 				return FieldType.String;
 			} else if (fieldType == int.class) {
@@ -249,8 +257,7 @@ public class Jeson {
 				return FieldType.Double;
 			} else if (fieldType == long.class) {
 				return FieldType.Long;
-			} else if (Arrays.toString(fieldType.getGenericInterfaces())
-					.contains(List.class.getName())) {
+			} else if (isList(field)) {
 				return FieldType.JsonArray;
 			} else {
 				return FieldType.Unknow;
@@ -297,5 +304,19 @@ public class Jeson {
 			}
 		}
 		return list;
+	}
+
+	private static boolean isList(Field field) {
+		if (field.getType() == List.class) {
+			return true;
+		}
+		try {
+			Type[] types = Class.forName(field.getType().getName())
+					.newInstance().getClass().getGenericInterfaces();
+			return Arrays.toString(types).contains(List.class.getName());
+		} catch (Exception e) {
+			Log.e(TAG, e.toString());
+		}
+		return false;
 	}
 }
