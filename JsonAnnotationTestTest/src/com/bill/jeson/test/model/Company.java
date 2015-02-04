@@ -13,7 +13,7 @@ public class Company {
 	private String name;
 	@JsonField(type = FieldType.JsonObject)
 	private PeopleAll ceo;
-	@JsonField(type = FieldType.JsonArray)
+	@JsonField()
 	private List<PeopleAll> employee;
 
 	public String getName() {

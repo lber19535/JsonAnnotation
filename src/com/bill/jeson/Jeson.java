@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -22,7 +23,7 @@ import com.bill.jeson.annotation.JsonObject;
  * analysis json string to java bean.
  * 
  * @author Bill Lv
- * @version 1.0
+ * @version 1.1
  */
 public class Jeson {
 
@@ -58,7 +59,6 @@ public class Jeson {
 				Object fieldValue = null;
 				switch (fieldType) {
 				case JsonArray:
-
 					fieldValue = getJsonFieldValue(field, fieldType,
 							jsonObject, fieldName);
 					break;
@@ -238,7 +238,7 @@ public class Jeson {
 	private static FieldType getFieldType(Field field) {
 		JsonField jsonField = field.getAnnotation(JsonField.class);
 		if (jsonField.type() == FieldType.Unknow) {
-			Type fieldType = field.getGenericType();
+			Class fieldType = field.getType();
 			if (fieldType == String.class) {
 				return FieldType.String;
 			} else if (fieldType == int.class) {
@@ -249,6 +249,9 @@ public class Jeson {
 				return FieldType.Double;
 			} else if (fieldType == long.class) {
 				return FieldType.Long;
+			} else if (Arrays.toString(fieldType.getGenericInterfaces())
+					.contains(List.class.getName())) {
+				return FieldType.JsonArray;
 			} else {
 				return FieldType.Unknow;
 			}
@@ -267,6 +270,9 @@ public class Jeson {
 		return obj.getClass().getDeclaredFields();
 	}
 
+	/*
+	 * get list generic type
+	 */
 	private static Class<?> getListGenericType(Field field) {
 		ParameterizedType parameterizedType = (ParameterizedType) field
 				.getGenericType();
