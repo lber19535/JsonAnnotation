@@ -86,7 +86,6 @@ public class Jeson {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T extends Object> T createBean(Class<T> javaBean, String json)
 			throws Exception {
 		// if javabean is not a jsonobject
@@ -260,7 +259,7 @@ public class Jeson {
 			} else if (isList(field)) {
 				return FieldType.JsonArray;
 			} else {
-				return FieldType.Unknow;
+				return FieldType.JsonObject;
 			}
 			// TODO add json object and json array
 		} else {
