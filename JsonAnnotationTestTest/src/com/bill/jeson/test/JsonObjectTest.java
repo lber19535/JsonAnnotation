@@ -8,8 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.bill.jeson.Jeson;
 import com.bill.jeson.test.model.Company;
+import com.bill.jeson.test.model.FinalValue;
 import com.bill.jeson.test.model.HttpHeader;
 import com.bill.jeson.test.model.PeopleAll;
 import com.bill.jeson.test.model.PeopleWithoutType;
@@ -327,6 +330,21 @@ public class JsonObjectTest extends TestCase {
 				assertEquals(13800000000L, item.getLong("phoneNumber"));
 				assertEquals(55.1, item.getDouble("weight"), 0);
 			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void testFinalValue() {
+		FinalValue finalValue = new FinalValue();
+		try {
+			assertEquals("next",
+					new JSONObject(Jeson.bean2String(finalValue))
+							.getString("finalStr"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
